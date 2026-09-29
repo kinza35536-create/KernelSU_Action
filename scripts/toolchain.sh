@@ -85,9 +85,14 @@ setup_clang() {
 			warn "master-kernel-build-2022/r450784e"
 		fi
 
-		fetch "${AOSP_CLANG_BASE}/+archive/refs/heads/${branch}/clang-${version}.tar.gz" \
-			"${WORKSPACE}/clang.tar.gz"
-		extract_archive "${WORKSPACE}/clang.tar.gz" "$CLANG_DIR"
+		curl -L --retry 5 --retry-delay 5 --fail \
+  "${AOSP_CLANG_BASE}/+archive/refs/heads/${branch}/clang-${version}.tar.gz" \
+  -o "${WORKSPACE}/clang.tar.gz"
+
+if [ $? -ne 0 ]; then
+    echo "Error: failed to download clang-${version}.tar.gz"
+    exit 1
+fi
 	fi
 
 	# The check that turns the empty-archive trap into an actionable error.
