@@ -185,13 +185,37 @@ jobs:
           key: kernel-${{ env.DEVICE }}-${{ env.KSU_VARIANT }}-${{ env.KERNEL_VERSION }}
           max-size: 2G
 
-      - name: Build kernel
+            - name: Build kernel
         run: |
           set +e
           bash scripts/build.sh all 2>&1 | tee kernel-build.log
           status=${PIPESTATUS[0]}
-          echo "===== LAST 200 LINES ====="
-          tail -n 200 kernel-build.log
+
+          echo ""
+          echo "========================================"
+          echo "       BUILD FAILURE SIGNALS"
+          echo "========================================"
+
+          grep -nEi \
+            'error:|fatal error:|undefined reference|No rule to make target|Error [0-9]+|Killed|Terminated|signal|No space left|out of memory|cannot allocate|clang: error' \
+            kernel-build.log | tail -n 100 || true
+
+          echo ""
+          echo "========================================"
+          echo "       RUNNER RESOURCES"
+          echo "========================================"
+
+          free -h || true
+          df -h . || true
+          nproc || true
+
+          echo ""
+          echo "========================================"
+          echo "       LAST 300 LINES"
+          echo "========================================"
+
+          tail -n 300 kernel-build.log
+
           exit "$status"
 
       - name: Package artifacts
