@@ -186,13 +186,16 @@ jobs:
           max-size: 2G
 
       - name: Build kernel
-         run: |
-            set +e
-            bash scripts/build.sh all 2>&1 | tee kernel-build.log
-            status=${PIPESTATUS[0]}
-            echo "===== LAST 200 LINES ====="
-            tail -n 200 kernel-build.log
-            exit "$status"
+        run: |
+          set +e
+          bash scripts/build.sh all 2>&1 | tee kernel-build.log
+          status=${PIPESTATUS[0]}
+          echo "===== LAST 200 LINES ====="
+          tail -n 200 kernel-build.log
+          exit "$status"
+
+      - name: Package artifacts
+        run: bash scripts/package.sh all
 
       - name: Package artifacts
         run: bash scripts/package.sh all
