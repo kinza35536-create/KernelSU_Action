@@ -192,7 +192,7 @@ jobs:
           status=${PIPESTATUS[0]}
           echo "===== LAST 200 LINES ====="
           tail -n 200 kernel-build.log
-          exit $status
+          exit "$status"
 
       - name: Package artifacts
         run: bash scripts/package.sh all
