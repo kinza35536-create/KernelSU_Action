@@ -167,6 +167,14 @@ ksu_install() {
 		fi
 	fi
 	ok "${name} installed at ${head_desc} (${head_sha})"
+		# KernelSU v0.9.5 compatibility fix for this 5.4 kernel:
+	# this kernel provides strncpy_from_user_nofault(), not
+	# strncpy_from_unsafe_user().
+	if [ "$variant" = "kernelsu" ] && [ "${ref:-}" = "v0.9.5" ]; then
+		sed -i 's/strncpy_from_unsafe_user(/strncpy_from_user_nofault(/g' \
+			"$ksu_dir/kernel/kernel_compat.c"
+		info "patched KernelSU v0.9.5: strncpy_from_unsafe_user -> strncpy_from_user_nofault"
+	fi
 
 	# --- publish facts the later steps need --------------------------------
 	local count version_label
