@@ -168,7 +168,7 @@ ksu_install() {
 	fi
 	ok "${name} installed at ${head_desc} (${head_sha})"
 		
-		# KernelSU v0.9.5 compatibility fix for this 5.4 kernel:
+    # KernelSU v0.9.5 compatibility fix for this 5.4 kernel:
 	# this kernel provides strncpy_from_user_nofault(), not
 	# strncpy_from_unsafe_user().
 	if [ "$variant" = "kernelsu" ] && [ "${ref:-}" = "v0.9.5" ]; then
